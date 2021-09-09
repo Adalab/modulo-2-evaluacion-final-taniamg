@@ -1,8 +1,12 @@
 "use strict";
-
+// 1. declaro mainElements para tener acceso a js_main que se usa en paintHtml
 const mainElements = document.querySelector(".js_main");
-const btnSearch = document.querySelector(".js_btn");
 
+// 2. declaro los arrays para almacenar api
+let dataSeries = [];
+let favouritesSeries = [];
+
+// 3. funcion que crea el html del buscador
 function paintHtml() {
   let html = "";
   html += `<section>`;
@@ -20,24 +24,49 @@ function paintHtml() {
   html += `<div class="favourites_container">`;
   html += `</div>`;
   html += `<div class="series_container">`;
+  html += `<ul class="list_series">`;
+  html += `</ul>`;
   html += `</div>`;
   html += `</section>`;
   mainElements.innerHTML = html;
 }
+
+// 4. llamo a la funcion para que pinte html en main
 paintHtml();
 
-function handleButtonSearch(ev) {
-  debugger;
-  let inputEl = document.querySelector(".js_text");
-  const url = "//api.tvmaze.com/search/shows?q=" + inputEl.value;
-  console.log(url);
+// 5.declaro las variables DESPUES de crear html, porque hace referencia a elementos que se crean DINAMICAMENTE. EL ORDEN IMPORTA!!
+const btnSearch = document.querySelector(".js_btn");
+let inputEl = document.querySelector(".js_text");
+const series = document.querySelectorAll(".list_series");
 
+// 6. declaro la funcion que llama a la API y almacena result en dataSeries
+function getFromApi() {
+  const url = "https://api.tvmaze.com/search/shows?q=" + inputEl.value;
+
+  console.log("Step 2");
+  // Llamamos a api y el resultado se lo pasamos al handle, ya que la respuesta puede tarda x, y el flujo de app sigue.
   fetch(url)
     .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-    });
-  ev.preventDefault();
+    .then((result) => handleResult(result));
 }
 
+function handleResult(result) {
+  dataSeries = result;
+  console.log("Step 3");
+  console.log(dataSeries);
+
+  //paintSeries()
+}
+
+//7. declaro la función manejadora que llama al evento de buscar en el API
+function handleButtonSearch(ev) {
+  console.log("Init - Pulso boton");
+  ev.preventDefault();
+  console.log("Step 1");
+  getFromApi();
+
+  console.log("Step 4");
+}
+
+//
 btnSearch.addEventListener("click", handleButtonSearch);
