@@ -1,0 +1,12 @@
+-[x] Hacer un esquema -[x] Hacer la estructura de HTMl donde vamos a implementar con javaScript los elementos. Css justo para empezar.
+-[]Iniciar busqueda: -[x]crear imput texto y boton de busqueda.
+-[]filtrar por datos imput busqueda.
+-[]ecuchar evento sobre boton busqueda
+-[]crear petición al servidor.
+-[]guardar resultado en una variable.
+-[]pintar series resultantes de la busqueda.
+-[] Seleccionar series favoritas:
+-[]crear función manejadora.
+-[]escuchar evento sobre el resultado de la busqueda.
+-[]identificar la serie seleccionada.
+-[]añadir al array favoritos y pintarlo en su espacio correspondiente.
