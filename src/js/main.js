@@ -27,6 +27,8 @@ function paintHtml() {
   html += `<section class="main_series--container">`;
   html += `<div class="favourites_container">`;
   html += `<h2> Series favoritas: </h2>`;
+  html += `<ul class="fav_list--series fav_series--container">`;
+  html += `</ul>`;
   html += `</div>`;
   html += `<div class="series_container">`;
   html += `<h2> Hemos encontrado.... </h2>`;
@@ -43,8 +45,9 @@ paintHtml();
 // 5.declaro las variables DESPUES de crear html, porque hace referencia a elementos que se crean DINAMICAMENTE. EL ORDEN IMPORTA!!
 const btnSearch = document.querySelector(".js_btn");
 const form = document.querySelector(".js_form");
-let inputEl = document.querySelector(".js_text");
-let series = document.querySelector(".list_series");
+const inputEl = document.querySelector(".js_text");
+const series = document.querySelector(".list_series");
+const favElements = document.querySelector(".fav_list--series");
 
 // 6. declaro la funcion que llama a la API y almacena result en dataSeries
 function getFromApi() {
@@ -61,8 +64,8 @@ function getFromApi() {
 
 //funcion para pintar series en ul
 function paintSeries() {
-  console.log(dataSeries);
   series.innerHTML = "";
+
   for (const iten of dataSeries) {
     console.log(iten);
     series.innerHTML += `<li class="series_place favourites js_favourites" id=${iten.show.id}>`;
@@ -87,7 +90,13 @@ function listenSerieList() {
   }
 }
 
-//2.
+//2.funcion que pinta series favoritas
+function paintFavSeries() {
+  favElements = "";
+
+  for (const eachSerie of favouritesSeries) {
+  }
+}
 
 //. eventos
 function handleButtonSearch(ev) {
