@@ -1,6 +1,8 @@
 "use strict";
 // 1. declaro mainElements para tener acceso a js_main que se usa en paintHtml
 const mainElements = document.querySelector(".js_main");
+const imageDefault =
+  "https://via.placeholder.com/210x295/ffffff/666666/?text=TV";
 
 // 2. declaro los arrays para almacenar api
 let dataSeries = [];
@@ -22,8 +24,10 @@ function paintHtml() {
   html += `</section>`;
   html += `<section class="main_series--container">`;
   html += `<div class="favourites_container">`;
+  html += `<h2> Series favoritas: </h2>`;
   html += `</div>`;
   html += `<div class="series_container">`;
+  html += `<h2> Hemos encontrado.... </h2>`;
   html += `<ul class="list_series">`;
   html += `</ul>`;
   html += `</div>`;
@@ -42,12 +46,14 @@ let series = document.querySelector(".list_series");
 // 6. declaro la funcion que llama a la API y almacena result en dataSeries
 function getFromApi() {
   const url = "https://api.tvmaze.com/search/shows?q=" + inputEl.value;
-
   console.log("Step 2");
   // Llamamos a api y el resultado se lo pasamos al handle, ya que la respuesta puede tarda x, y el flujo de app sigue.
   fetch(url)
     .then((response) => response.json())
-    .then((result) => handleResult(result));
+    .then((result) => {
+      dataSeries = result;
+      paintSeries();
+    });
 }
 
 function handleResult(result) {
@@ -59,17 +65,22 @@ function handleResult(result) {
 }
 //funcion para pintar series en ul
 function paintSeries() {
-  debugger;
+  console.log(dataSeries);
+  series.innerHTML = "";
   for (const iten of dataSeries) {
     console.log(iten);
-    series.innerHTML += `<li>`;
-    /*series.innerHTML += `<img src ="${iten.show.image.medium}">`;*/
-
+    series.innerHTML += `<li class="favorites js_favorites">`;
+    if (iten.show.image === null) {
+      series.innerHTML += `<img src ="${imageDefault}">`;
+    } else {
+      series.innerHTML += `<img src ="${iten.show.image.medium}">`;
+    }
     series.innerHTML += `<h2>${iten.show.name}</h2>`;
     series.innerHTML += `</li>`;
   }
 }
-let serieItenImg = document.querySelector(".serieImg");
+
+//funcion favoritos
 
 //7. declaro la función manejadora que llama al evento de buscar en el API
 function handleButtonSearch(ev) {
@@ -78,8 +89,6 @@ function handleButtonSearch(ev) {
   console.log("Step 1");
   getFromApi();
   console.log("Step 4");
-
-  paintSeries();
 }
 
 //
