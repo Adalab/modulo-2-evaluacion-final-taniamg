@@ -37,7 +37,7 @@ paintHtml();
 // 5.declaro las variables DESPUES de crear html, porque hace referencia a elementos que se crean DINAMICAMENTE. EL ORDEN IMPORTA!!
 const btnSearch = document.querySelector(".js_btn");
 let inputEl = document.querySelector(".js_text");
-const series = document.querySelectorAll(".list_series");
+let series = document.querySelector(".list_series");
 
 // 6. declaro la funcion que llama a la API y almacena result en dataSeries
 function getFromApi() {
@@ -57,6 +57,19 @@ function handleResult(result) {
 
   //paintSeries()
 }
+//funcion para pintar series en ul
+function paintSeries() {
+  debugger;
+  for (const iten of dataSeries) {
+    console.log(iten);
+    series.innerHTML += `<li>`;
+    /*series.innerHTML += `<img src ="${iten.show.image.medium}">`;*/
+
+    series.innerHTML += `<h2>${iten.show.name}</h2>`;
+    series.innerHTML += `</li>`;
+  }
+}
+let serieItenImg = document.querySelector(".serieImg");
 
 //7. declaro la función manejadora que llama al evento de buscar en el API
 function handleButtonSearch(ev) {
@@ -64,8 +77,9 @@ function handleButtonSearch(ev) {
   ev.preventDefault();
   console.log("Step 1");
   getFromApi();
-
   console.log("Step 4");
+
+  paintSeries();
 }
 
 //
