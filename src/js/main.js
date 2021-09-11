@@ -15,7 +15,7 @@ function paintHtml() {
   let html = "";
   html += `<section>`;
   html += `<div class="search_container" >`;
-  html += `<h1> ¿Qué serie quieres encontrar? </h1>`;
+  html += `<h1> Number 5 is alive. What do I search for you?</h1>`;
   html += `<form class="form_container js_form">`;
   html += `<label for="search request"> </label>`;
   html += `<input class="text js_text" type="text" placeholder="Fringe" />`;
@@ -48,10 +48,21 @@ const form = document.querySelector(".js_form");
 const inputEl = document.querySelector(".js_text");
 const series = document.querySelector(".list_series");
 const favElements = document.querySelector(".fav_list--series");
-
 // 6. declaro la funcion que llama a la API y almacena result en dataSeries
 function getFromApi() {
   const url = "https://api.tvmaze.com/search/shows?q=" + inputEl.value;
+
+  //eventos
+
+  function handleButtonSearch(ev) {
+    getFromApi();
+  }
+  btnSearch.addEventListener("click", handleButtonSearch);
+
+  function preventD(event) {
+    event.preventDefault();
+  }
+  form.addEventListener("submit", preventD);
 
   fetch(url)
     .then((response) => response.json())
@@ -64,47 +75,119 @@ function getFromApi() {
 
 //funcion para pintar series en ul
 function paintSeries() {
-  series.innerHTML = "";
+  let seriesList = "";
 
   for (const iten of dataSeries) {
     console.log(iten);
-    series.innerHTML += `<li class="series_place favourites js_favourites" id=${iten.show.id}>`;
+    seriesList += `<li class="series_place favourites " id=${iten.show.id}>`;
+
     if (iten.show.image === null) {
-      series.innerHTML += `<img src ="${imageDefault}">`;
+      seriesList += `<img src ="${imageDefault}">`;
     } else {
-      series.innerHTML += `<img src ="${iten.show.image.medium}">`;
+      seriesList += `<img src ="${iten.show.image.medium}">`;
     }
-    series.innerHTML += `<h2>${iten.show.name}</h2>`;
-    series.innerHTML += `</li>`;
+    seriesList += `<h2>${iten.show.name}</h2>`;
+    seriesList += `</li>`;
   }
+  series.innerHTML = seriesList;
+
+  listenSerieList();
 }
 
 //funcion favoritos
 
-//1. funcion que reconozca evento click sobre los li de cada  serie
+// funcion manejadora del evento que va a escuchar cada serie, elegirla y añadirla a fav
+function handleFavSeries(ev) {
+  //variable para obtener el id de cada serie clicada
+  const selectedSerie = parseInt(ev.target.parentElement.id);
+  //busco la serie en el array de series
+  const clickedSerie = dataSeries.find((iten) => {
+    iten.show.id === selectedSerie;
+  });
 
+  // busco la serieclicada en el array de favoritos
+  const favSeriesFound = favouritesSeries.findIndex((favIten) => {
+    return favIten.show.id === selectedSerie;
+  });
+  //si no esta me devuelve -1
+  if (favSeriesFound === -1) {
+    //lo añado a favoritos
+    favouritesSeries.push(clickedSerie);
+  } else {
+    //lo quitamos
+    favouritesSeries.splice(favSeriesFound, 1);
+  }
+  paintFavSeries();
+  paintSeries();
+  setInLocalStorage();
+}
+debugger;
+//funcion que reconozca evento click sobre los li de cada  serie
 function listenSerieList() {
   const favSeriesElements = document.querySelectorAll(".js_favourites");
   for (const favSerie of favSeriesElements) {
     favSerie.addEventListener("click", handleFavSeries);
   }
 }
+//compruebo si es favorita
 
-//2.funcion que pinta series favoritas
-function paintFavSeries() {
-  favElements = "";
+function isFavourite(iten) {
+  const favouriteFound = favouritesSeries.find((favIten) => {
+    return favIten.show.id === iten.show.id;
+  });
 
-  for (const eachSerie of favouritesSeries) {
+  if (favouriteFound === undefined) {
+    return false;
+  } else {
+    return true;
   }
 }
 
-//. eventos
-function handleButtonSearch(ev) {
-  getFromApi();
+function isValidSerie(iten) {
+  const filterNameValue = filterInput.value.toLowerCase();
+  return iten.name.toLowerCase().includes(filterNameValue);
 }
-btnSearch.addEventListener("click", handleButtonSearch);
 
-function preventD(event) {
-  event.preventDefault();
+//2.funcion que pinta series favoritas
+function paintFavSeries() {
+  let favElement = "";
+
+  for (const eachSerie of favouritesSeries) {
+    favElement += `<li class="series_place favourites js_favourites" id=${eachSerie.show.id}>`;
+
+    if (eachSerie.show.image === null) {
+      favElement += `<img src ="${imageDefault}">`;
+    } else {
+      favElement += `<img src ="${eachSerie.show.image.medium}">`;
+    }
+    favElements += `<h2>${eachSerie.show.name}</h2>`;
+    favElements += `</li>`;
+  }
+  favElements.innerHTML = favElement;
 }
-form.addEventListener("submit", preventD);
+paintFavSeries();
+
+// localStorage
+
+function setInLocalStorage() {
+  //con stringify paso el array a string
+  const stringSeries = JSON.stringify(favouritesSeries);
+  //añado los datos convertidos a localStorage
+  localStorage.setItem("favouritesSeries", stringSeries);
+}
+
+//funcion para buscar el LS si hay informacion
+function getLocalStorage() {
+  //const pra obtener lo que hay en el LS
+  const localStorageSeries = localStorage.getItem("favouritesSeries");
+  if (localStorageSeries === null) {
+    //no hay datos asi que ejecutamos peticion a API
+    getFromApi();
+  } else {
+    //si hay datos los guardo en una variable y loincluyo en el array favoritos
+    const arrayPreviousFav = JSON.parse(localStorageSeries);
+    favouritesSeries = arrayPreviousFav;
+    paintFavSeries();
+  }
+}
+getLocalStorage();
