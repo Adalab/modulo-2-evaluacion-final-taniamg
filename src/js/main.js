@@ -26,12 +26,12 @@ function paintHtml() {
   html += `</section>`;
   html += `<section class="main_series--container">`;
   html += `<div class="favourites_container">`;
-  html += `<h2> Series favoritas: </h2>`;
+  html += `<h2> You say yours favourites are: </h2>`;
   html += `<ul class="favourites_container--series fav_list--series">`;
   html += `</ul>`;
   html += `</div>`;
   html += `<div class="series_container">`;
-  html += `<h2> Hemos encontrado.... </h2>`;
+  html += `<h2> Number 5 finds to you : </h2>`;
   html += `<ul class="series_container--list list_series">`;
   html += `</ul>`;
   html += `</div>`;
@@ -157,16 +157,23 @@ function isValidSerie(iten) {
 //2.funcion que pinta series favoritas
 function paintFavSeries() {
   let favElement = "";
+  /*let favClass = "";*/
 
   for (const eachSerie of favouritesSeries) {
-    favElement += `<li class="series_place favourites js_favourites" id=${eachSerie.show.id}>`;
+    /*const isFav = isFavourite(iten);
+    if (isFav) {
+      favClass = "favourite_check";
+    } else {
+      favClass = "standart_item";
+    }*/
+    favElement += `<li class="favourites_item js_favourites" id=${eachSerie.show.id}>`;
 
     if (eachSerie.show.image === null) {
-      favElement += `<img src ="${imageDefault}">`;
+      favElement += `<img class="favourites_item--img" src ="${imageDefault}">`;
     } else {
-      favElement += `<img src ="${eachSerie.show.image.medium}">`;
+      favElement += `<img  class="favourites_item--img" src ="${eachSerie.show.image.medium}">`;
     }
-    favElement += `<h2>${eachSerie.show.name}</h2>`;
+    favElement += `<h2 class="favourites_item--name">${eachSerie.show.name}</h2>`;
     favElement += `</li>`;
   }
   favElements.innerHTML = favElement;
