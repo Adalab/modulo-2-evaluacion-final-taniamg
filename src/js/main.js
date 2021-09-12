@@ -85,14 +85,14 @@ function paintSeries() {
   //console.log(dataSeries);
   for (const iten of dataSeries) {
     //console.log(iten);
-    seriesList += `<li class="series_place favourites js_favourites" id=${iten.show.id}>`;
+    seriesList += `<li class="series_item favourites js_favourites" id=${iten.show.id}>`;
 
     if (iten.show.image === null) {
-      seriesList += `<img src ="${imageDefault}">`;
+      seriesList += `<img class="series_item--img"src ="${imageDefault}">`;
     } else {
-      seriesList += `<img src ="${iten.show.image.medium}">`;
+      seriesList += `<img class="series_item--img" src ="${iten.show.image.medium}">`;
     }
-    seriesList += `<h2>${iten.show.name}</h2>`;
+    seriesList += `<h2 class="series_item--name">${iten.show.name}</h2>`;
     seriesList += `</li>`;
   }
   series.innerHTML = seriesList;
