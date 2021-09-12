@@ -17,17 +17,18 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-}
-.text {
-  width: 300px;
-  height: 25px;
-  text-align: center;
-  border-radius: 20px;
-}
-.button {
-  width: 100px;
-  height: 25px;
-  border-radius: 20px;
+
+  &--text {
+    width: 300px;
+    height: 25px;
+    text-align: center;
+    border-radius: 20px;
+  }
+  &--button {
+    width: 100px;
+    height: 25px;
+    border-radius: 20px;
+  }
 }
 .main_series--container {
   width: 100%;
@@ -39,13 +40,14 @@
 }
 .series_container {
   height: 100%;
-}
-.list_series--container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
+
+  &--list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
 }
 .series_place {
   flex-direction: column;
