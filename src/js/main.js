@@ -42,22 +42,14 @@ const form = document.querySelector(".js_form");
 const inputEl = document.querySelector(".js_text");
 const series = document.querySelector(".list_series");
 const favElements = document.querySelector(".fav_list--series");
-// 6. declaro la funcion que llama a la API y almacena result en dataSeries
-
-//Events
-function handleButtonSearch() {
-  getFromApi();
-}
 
 function preventD(event) {
   event.preventDefault();
 }
-
-btnSearch.addEventListener("click", handleButtonSearch);
 form.addEventListener("submit", preventD);
 
 // call API to get info
-function getFromApi() {
+function handleButtonSearch() {
   const url = "https://api.tvmaze.com/search/shows?q=" + inputEl.value;
   fetch(url)
     .then((response) => response.json())
@@ -67,6 +59,8 @@ function getFromApi() {
       paintSeries();
     });
 }
+
+btnSearch.addEventListener("click", handleButtonSearch);
 
 //function to paint list series array at HTML
 function paintSeries() {
@@ -88,43 +82,15 @@ function paintSeries() {
   listenSerieList(); //call each input to favoriteSeries
 }
 
-//funcion favoritos
+//listener fav series
 
-// funcion manejadora del evento que va a escuchar cada serie, elegirla y añadirla a fav
-function handleFavSeries(ev) {
-  //variable para obtener el id de cada serie clicada
-  const selectedSerie = parseInt(ev.currentTarget.id);
-  //busco la serie en el array de series
-  const clickedSerie = dataSeries.find((iten) => {
-    return iten.show.id === selectedSerie;
-  });
-
-  // busco la serieclicada en el array de favoritos
-  const favSeriesFound = favouritesSeries.findIndex((favIten) => {
-    return favIten.show.id === selectedSerie;
-  });
-  //si no esta me devuelve -1
-  if (favSeriesFound === -1) {
-    //lo añado a favoritos
-    favouritesSeries.push(clickedSerie);
-  } else {
-    //lo quitamos
-    favouritesSeries.splice(favSeriesFound, 1);
-  }
-  paintFavSeries();
-  handleEachDelBtn();
-  setInLocalStorage();
-}
-
-//funcion que reconozca evento click sobre los li de cada  serie
 function listenSerieList() {
   const favSeriesElements = document.querySelectorAll(".js_favourites");
   for (const favSerie of favSeriesElements) {
     favSerie.addEventListener("click", handleFavSeries);
   }
 }
-//compruebo si es favorita
-
+//check if is a previous one
 function isFavourite(iten) {
   const favouriteFound = favouritesSeries.find((favIten) => {
     return favIten.show.id === iten.show.id;
@@ -137,23 +103,43 @@ function isFavourite(iten) {
   }
 }
 
+//check a valid one
 function isValidSerie(iten) {
   const filterNameValue = filterInput.value.toLowerCase();
   return iten.name.toLowerCase().includes(filterNameValue);
 }
 
-//2.funcion que pinta series favoritas
+//handle event
+function handleFavSeries(ev) {
+  //search  clicked id
+  const selectedSerie = parseInt(ev.currentTarget.id);
+  //find serie which belongs id
+  const clickedSerie = dataSeries.find((iten) => {
+    return iten.show.id === selectedSerie;
+  });
+
+  // check serie at fav array
+  const favSeriesFound = favouritesSeries.findIndex((favIten) => {
+    return favIten.show.id === selectedSerie;
+  });
+  //if it doesn´t give back -1
+  if (favSeriesFound === -1) {
+    // add fav array
+    favouritesSeries.push(clickedSerie);
+  } else {
+    //if it is delete it
+    favouritesSeries.splice(favSeriesFound, 1);
+  }
+  paintFavSeries();
+  /*handleEachDelBtn();*/
+  setInLocalStorage();
+}
+
+//paint fav lis serie
 function paintFavSeries() {
   let favElement = "";
-  /*let favClass = "";*/
 
   for (const eachSerie of favouritesSeries) {
-    /*const isFav = isFavourite(iten);
-    if (isFav) {
-      favClass = "favourite_check";
-    } else {
-      favClass = "standart_item";
-    }*/
     favElement += `<li class="favourites_item js_favourites" id=${eachSerie.show.id}>`;
 
     if (eachSerie.show.image === null) {
@@ -168,54 +154,46 @@ function paintFavSeries() {
   favElements.innerHTML = favElement;
 }
 
-// localStorage
-
-function setInLocalStorage() {
-  //con stringify paso el array a string
-  const stringSeries = JSON.stringify(favouritesSeries);
-  //añado los datos convertidos a localStorage
-  localStorage.setItem("favouritesSeries", stringSeries);
-}
-
-//funcion para buscar el LS si hay informacion
-function getLocalStorage() {
-  //const pra obtener lo que hay en el LS
-  const localStorageSeries = localStorage.getItem("favouritesSeries");
-  if (localStorageSeries === null) {
-    //no hay datos asi que ejecutamos peticion a API
-    //getFromApi();
-  } else {
-    //si hay datos los guardo en una variable y loincluyo en el array favoritos
-    const arrayPreviousFav = JSON.parse(localStorageSeries);
-    favouritesSeries = arrayPreviousFav;
-    paintFavSeries();
-  }
-}
-getLocalStorage();
-
 //delete a single favourite
 
 //listen each favourite delete item
-debugger;
-const eachDelButn = () => {
-  const delEachFavBtn = document.querySelectorAll(".resetFavItem");
-  for (const eachbtn of delEachFavBtn) {
-    eachbtn.addEventListener("click", handleEachDelBtn);
-  }
-};
 
-const handleEachDelBtn = (ev) => {
-  const indexBtn = parseInt(ev.currentTarget.id);
-  const clickedIcon = favouritesSeries.find((favIten) => {
-    return favIten.show.id === clickedIcon;
-  });
-  const previousIten = favouritesSeries.findIndex((favIten) => {
-    return favIten.show.id === clickedIcon;
-  });
-  if (previousIten !== -1) {
-    favouritesSeries.splice(indexBtn, 1);
+function clickDelBtn() {
+  const delEachFavBtn = document.querySelectorAll(".js-delete-btn");
+  for (const eachbtn of delEachFavBtn) {
+    eachbtn.addEventListener("click", deleteOneSerie);
   }
-  setInLocalStorage();
+}
+
+function deleteOneSerie(ev) {
+  const selectedDelSerie = parseInt(ev.currentTarget.id);
+  const clickedSerie = favouritesSeries.findIndex((fav) => {
+    return fav.show.id === selectedDelSerie;
+  });
+  if (clickedSerie !== -1) {
+    favouritesSeries.splice(clickedSerie, 1);
+  }
+
   favouritesSeries();
-  /*paintSeries();*/
-};
+  paintSeries();
+  setInLocalStorage();
+}
+
+// localStorage
+
+// set in
+function setInLocalStorage() {
+  localStorage.setItem("favouritesSeries", JSON.stringify(favouritesSeries));
+}
+
+//get off
+function getLocalStorage() {
+  const localStorageSeries = localStorage.getItem("favouritesSeries");
+  favouritesSeries = JSON.parse(localStorageSeries);
+  paintFavSeries();
+  deleteOneSerie();
+}
+
+getLocalStorage();
+
+btnSearch.addEventListener("click", handleButtonSearch);
