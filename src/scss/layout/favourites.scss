@@ -20,8 +20,6 @@
   border-radius: 20px;
   width: 150px;
   height: auto;
-  border: 1px solid purple;
-  background-color: whitesmoke;
 
   &--img {
     width: 100px;
@@ -38,4 +36,8 @@
 }
 .reset_item--button {
   border: none;
+}
+.favourites {
+  border: 1px solid purple;
+  background-color: whitesmoke;
 }

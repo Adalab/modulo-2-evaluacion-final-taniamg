@@ -65,15 +65,8 @@ btnSearch.addEventListener("click", handleButtonSearch);
 //function to paint list series array at HTML
 function paintSeries() {
   let seriesList = "";
-  let favClass = "";
 
   for (const iten of dataSeries) {
-    const isFav = isFavourite(iten);
-    if (isFav) {
-      favClass = "favourite_check";
-    } else {
-      favClass = "";
-    }
     seriesList += `<li class="series_item favourites js_favourites" id=${iten.show.id}>`;
 
     if (iten.show.image === null) {
