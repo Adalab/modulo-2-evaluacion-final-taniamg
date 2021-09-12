@@ -1,8 +1,9 @@
 "use strict";
-
+//firstly  var to create html
 const mainElements = document.querySelector(".js_main");
 const imageDefault =
   "https://via.placeholder.com/210x295/ffffff/666666/?text=TV";
+
 let dataSeries = [];
 let favouritesSeries = [];
 
@@ -59,14 +60,20 @@ function handleButtonSearch() {
       paintSeries();
     });
 }
-
 btnSearch.addEventListener("click", handleButtonSearch);
 
 //function to paint list series array at HTML
 function paintSeries() {
   let seriesList = "";
+  let favClass = "";
 
   for (const iten of dataSeries) {
+    const isFav = isFavourite(iten);
+    if (isFav) {
+      favClass = "favourite_check";
+    } else {
+      favClass = "";
+    }
     seriesList += `<li class="series_item favourites js_favourites" id=${iten.show.id}>`;
 
     if (iten.show.image === null) {
@@ -90,6 +97,12 @@ function listenSerieList() {
     favSerie.addEventListener("click", handleFavSeries);
   }
 }
+
+//check a valid one
+function isValidSerie(iten) {
+  const filterNameValue = filterInput.value.toLowerCase();
+  return iten.name.toLowerCase().includes(filterNameValue);
+}
 //check if is a previous one
 function isFavourite(iten) {
   const favouriteFound = favouritesSeries.find((favIten) => {
@@ -103,11 +116,7 @@ function isFavourite(iten) {
   }
 }
 
-//check a valid one
-function isValidSerie(iten) {
-  const filterNameValue = filterInput.value.toLowerCase();
-  return iten.name.toLowerCase().includes(filterNameValue);
-}
+/////listen and store favourite series
 
 //handle event
 function handleFavSeries(ev) {
