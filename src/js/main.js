@@ -1,16 +1,12 @@
 "use strict";
-// variables generales
+
 const mainElements = document.querySelector(".js_main");
 const imageDefault =
   "https://via.placeholder.com/210x295/ffffff/666666/?text=TV";
-
-// variable array llamada api
 let dataSeries = [];
-
-//variable array  creado favoritos
 let favouritesSeries = [];
 
-// 3. funcion que crea el html del buscador
+// 1.paint basic HTML from JS
 function paintHtml() {
   let html = "";
   html += `<section>`;
@@ -38,11 +34,9 @@ function paintHtml() {
   html += `</section>`;
   mainElements.innerHTML = html;
 }
-
-// 4. llamo a la funcion para que pinte html en main
 paintHtml();
 
-// 5.declaro las variables DESPUES de crear html, porque hace referencia a elementos que se crean DINAMICAMENTE. EL ORDEN IMPORTA!!
+//
 const btnSearch = document.querySelector(".js_btn");
 const form = document.querySelector(".js_form");
 const inputEl = document.querySelector(".js_text");
@@ -50,26 +44,21 @@ const series = document.querySelector(".list_series");
 const favElements = document.querySelector(".fav_list--series");
 // 6. declaro la funcion que llama a la API y almacena result en dataSeries
 
-btnSearch.addEventListener("click", handleButtonSearch);
-form.addEventListener("submit", preventD);
-
-function handleButtonSearch(ev) {
-  console.log("cacaSearch");
+//Events
+function handleButtonSearch() {
   getFromApi();
 }
 
 function preventD(event) {
-  console.log("cacaPrevent");
   event.preventDefault();
 }
 
+btnSearch.addEventListener("click", handleButtonSearch);
+form.addEventListener("submit", preventD);
+
+// call API to get info
 function getFromApi() {
   const url = "https://api.tvmaze.com/search/shows?q=" + inputEl.value;
-
-  //eventos
-
-  console.log("caca1");
-
   fetch(url)
     .then((response) => response.json())
     .then((result) => {
@@ -79,12 +68,11 @@ function getFromApi() {
     });
 }
 
-//funcion para pintar series en ul
+//function to paint list series array at HTML
 function paintSeries() {
   let seriesList = "";
-  //console.log(dataSeries);
+
   for (const iten of dataSeries) {
-    //console.log(iten);
     seriesList += `<li class="series_item favourites js_favourites" id=${iten.show.id}>`;
 
     if (iten.show.image === null) {
@@ -97,24 +85,23 @@ function paintSeries() {
   }
   series.innerHTML = seriesList;
 
-  listenSerieList();
+  listenSerieList(); //call each input to favoriteSeries
 }
 
 //funcion favoritos
 
 // funcion manejadora del evento que va a escuchar cada serie, elegirla y añadirla a fav
 function handleFavSeries(ev) {
-  //console.log("Pulso boton");
   //variable para obtener el id de cada serie clicada
   const selectedSerie = parseInt(ev.currentTarget.id);
   //busco la serie en el array de series
   const clickedSerie = dataSeries.find((iten) => {
-    return iten.show.id === parseInt(selectedSerie);
+    return iten.show.id === selectedSerie;
   });
 
   // busco la serieclicada en el array de favoritos
   const favSeriesFound = favouritesSeries.findIndex((favIten) => {
-    return favIten.show.id === parseInt(selectedSerie);
+    return favIten.show.id === selectedSerie;
   });
   //si no esta me devuelve -1
   if (favSeriesFound === -1) {
@@ -125,6 +112,7 @@ function handleFavSeries(ev) {
     favouritesSeries.splice(favSeriesFound, 1);
   }
   paintFavSeries();
+  handleEachDelBtn();
   setInLocalStorage();
 }
 
@@ -174,6 +162,7 @@ function paintFavSeries() {
       favElement += `<img  class="favourites_item--img" src ="${eachSerie.show.image.medium}">`;
     }
     favElement += `<h2 class="favourites_item--name">${eachSerie.show.name}</h2>`;
+    favElement += `<button name= "del" class="reset_item--button resetFavItem"type="reset" value="submit"><i class="far fa-times-circle reset_item"></i></button>`;
     favElement += `</li>`;
   }
   favElements.innerHTML = favElement;
@@ -203,3 +192,30 @@ function getLocalStorage() {
   }
 }
 getLocalStorage();
+
+//delete a single favourite
+
+//listen each favourite delete item
+debugger;
+const eachDelButn = () => {
+  const delEachFavBtn = document.querySelectorAll(".resetFavItem");
+  for (const eachbtn of delEachFavBtn) {
+    eachbtn.addEventListener("click", handleEachDelBtn);
+  }
+};
+
+const handleEachDelBtn = (ev) => {
+  const indexBtn = parseInt(ev.currentTarget.id);
+  const clickedIcon = favouritesSeries.find((favIten) => {
+    return favIten.show.id === clickedIcon;
+  });
+  const previousIten = favouritesSeries.findIndex((favIten) => {
+    return favIten.show.id === clickedIcon;
+  });
+  if (previousIten !== -1) {
+    favouritesSeries.splice(indexBtn, 1);
+  }
+  setInLocalStorage();
+  favouritesSeries();
+  /*paintSeries();*/
+};
