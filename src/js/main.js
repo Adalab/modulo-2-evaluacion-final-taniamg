@@ -157,10 +157,12 @@ function paintFavSeries() {
       favElement += `<img  class="favourites_item--img" src ="${eachSerie.show.image.medium}">`;
     }
     favElement += `<h2 class="favourites_item--name">${eachSerie.show.name}</h2>`;
-    favElement += `<button name= "del" class="reset_item--button resetFavItem"type="reset" value="submit"><i class="far fa-times-circle reset_item"></i></button>`;
+    favElement += `<button  class="js-delete-btn resetFavItem"type="reset" value="submit">x</button>`;
     favElement += `</li>`;
   }
   favElements.innerHTML = favElement;
+
+  clickDelBtn();
 }
 
 //delete a single favourite
@@ -183,7 +185,6 @@ function deleteOneSerie(ev) {
     favouritesSeries.splice(clickedSerie, 1);
   }
 
-  favouritesSeries();
   paintSeries();
   setInLocalStorage();
 }
@@ -198,9 +199,11 @@ function setInLocalStorage() {
 //get off
 function getLocalStorage() {
   const localStorageSeries = localStorage.getItem("favouritesSeries");
-  favouritesSeries = JSON.parse(localStorageSeries);
-  paintFavSeries();
-  deleteOneSerie();
+  if (localStorageSeries !== null) {
+    favouritesSeries = JSON.parse(localStorageSeries);
+    paintFavSeries();
+  }
+  //deleteOneSerie();
 }
 
 getLocalStorage();
