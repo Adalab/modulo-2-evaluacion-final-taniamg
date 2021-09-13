@@ -65,10 +65,15 @@ btnSearch.addEventListener("click", handleButtonSearch);
 //function to paint list series array at HTML
 function paintSeries() {
   let seriesList = "";
-
+  let favClass = "";
   for (const iten of dataSeries) {
-    seriesList += `<li class="series_item favourites js_favourites" id=${iten.show.id}>`;
-
+    const isFav = isFavourite(iten);
+    if (isFav) {
+      favClass = "favourite_check";
+      seriesList += `<li class="series_item  js_favourites favourite_check" id=${iten.show.id}>`;
+    } else {
+      seriesList += `<li class="series_item favourites js_favourites favourite_check" id=${iten.show.id}>`;
+    }
     if (iten.show.image === null) {
       seriesList += `<img class="series_item--img"src ="${imageDefault}">`;
     } else {
@@ -133,7 +138,7 @@ function handleFavSeries(ev) {
     favouritesSeries.splice(favSeriesFound, 1);
   }
   paintFavSeries();
-  /*handleEachDelBtn();*/
+
   setInLocalStorage();
 }
 
@@ -150,15 +155,13 @@ function paintFavSeries() {
       favElement += `<img  class="favourites_item--img" src ="${eachSerie.show.image.medium}">`;
     }
     favElement += `<h2 class="favourites_item--name">${eachSerie.show.name}</h2>`;
-    favElement += `<button  class="js-delete-btn resetFavItem"type="reset" value="submit">x</button>`;
+    favElement += `<button  class="js-delete-btn  reset_item--button "type="reset" value="submit">x</button>`;
     favElement += `</li>`;
   }
   favElements.innerHTML = favElement;
 
   clickDelBtn();
 }
-
-//delete a single favourite
 
 //listen each favourite delete item
 

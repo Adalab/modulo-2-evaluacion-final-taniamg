@@ -30,14 +30,23 @@
     width: 100px;
     size: 5px;
     text-align: center;
-
     color: purple;
   }
 }
 .reset_item--button {
-  border: none;
+  border: 1px solid red;
+  color: red;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  transform: translateY(-50%);
+  margin-top: 10px;
 }
 .favourites {
   border: 1px solid purple;
   background-color: whitesmoke;
+}
+.favourite_check {
+  background-color: purple;
+  border: 1px solid whitesmoke;
 }
