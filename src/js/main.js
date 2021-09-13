@@ -15,7 +15,7 @@ function paintHtml() {
   html += `<h1> Number 5 is alive. What do I search for you?</h1>`;
   html += `<form autocomplete="off" class="form_container js_form">`;
   html += `<label for="search request"> </label>`;
-  html += `<input id="search request" class="form_container--text js_text" type="text" placeholder="Fringe" />`;
+  html += `<input id="search request" class="form_container--text js_text" type="text" placeholder="e.g.,Fringe" />`;
   html += `<label for="submit"> </label>`;
   html += `<input id ="submit" class="form_container--button js_btn" type="submit"  />`;
   html += `</form >`;
@@ -23,6 +23,7 @@ function paintHtml() {
   html += `</section>`;
   html += `<section class="main_series--container">`;
   html += `<div class="favourites_container">`;
+  html += `<button  class="js-reset-btn  reset_total--button "type="reset" value="submit">Reset</button>`;
   html += `<h2> You say yours favourites are: </h2>`;
   html += `<ul class="favourites_container--series fav_list--series">`;
   html += `</ul>`;
@@ -62,23 +63,39 @@ function handleButtonSearch() {
 }
 btnSearch.addEventListener("click", handleButtonSearch);
 
+//check if is a previous one
+function isFavourite(iten) {
+  const favouriteFound = favouritesSeries.find((favIten) => {
+    return favIten.show.id === iten.show.id;
+  });
+
+  if (favouriteFound === undefined) {
+    return false;
+  } else {
+    return true;
+  }
+  console.log(isFavourite);
+}
+
 //function to paint list series array at HTML
 function paintSeries() {
   let seriesList = "";
-  let favClass = "";
+
   for (const iten of dataSeries) {
     const isFav = isFavourite(iten);
+    console.log(isFav);
     if (isFav) {
-      favClass = "favourite_check";
       seriesList += `<li class="series_item  js_favourites favourite_check" id=${iten.show.id}>`;
     } else {
-      seriesList += `<li class="series_item favourites js_favourites favourite_check" id=${iten.show.id}>`;
+      seriesList += `<li class="series_item favourites js_favourites " id=${iten.show.id}>`;
     }
+
     if (iten.show.image === null) {
       seriesList += `<img class="series_item--img"src ="${imageDefault}">`;
     } else {
       seriesList += `<img class="series_item--img" src ="${iten.show.image.medium}">`;
     }
+
     seriesList += `<h2 class="series_item--name">${iten.show.name}</h2>`;
     seriesList += `</li>`;
   }
@@ -102,7 +119,7 @@ function isValidSerie(iten) {
   return iten.name.toLowerCase().includes(filterNameValue);
 }
 //check if is a previous one
-function isFavourite(iten) {
+/*function isFavourite(iten) {
   const favouriteFound = favouritesSeries.find((favIten) => {
     return favIten.show.id === iten.show.id;
   });
@@ -112,7 +129,7 @@ function isFavourite(iten) {
   } else {
     return true;
   }
-}
+}*/
 
 /////listen and store favourite series
 
@@ -138,7 +155,7 @@ function handleFavSeries(ev) {
     favouritesSeries.splice(favSeriesFound, 1);
   }
   paintFavSeries();
-
+  paintSeries();
   setInLocalStorage();
 }
 
@@ -185,6 +202,11 @@ function deleteOneSerie(ev) {
   setInLocalStorage();
 }
 
+//reset all favourites series
+
+const resetAllBtn = document.querySelector(".js-reset-btn");
+resetAllBtn.addEventListener("click", reset);
+
 // localStorage
 
 // set in
@@ -203,5 +225,13 @@ function getLocalStorage() {
 }
 
 getLocalStorage();
+
+function reset() {
+  favouritesSeries = [];
+  dataSeries = [];
+  paintFavSeries();
+  paintSeries();
+  /*dataSeries = [];*/
+}
 
 btnSearch.addEventListener("click", handleButtonSearch);
