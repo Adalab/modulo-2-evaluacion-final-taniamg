@@ -74,7 +74,6 @@ function isFavourite(iten) {
   } else {
     return true;
   }
-  console.log(isFavourite);
 }
 
 //function to paint list series array at HTML
@@ -83,7 +82,6 @@ function paintSeries() {
 
   for (const iten of dataSeries) {
     const isFav = isFavourite(iten);
-    console.log(isFav);
     if (isFav) {
       seriesList += `<li class="series_item  js_favourites favourite_check" id=${iten.show.id}>`;
     } else {
@@ -118,18 +116,6 @@ function isValidSerie(iten) {
   const filterNameValue = filterInput.value.toLowerCase();
   return iten.name.toLowerCase().includes(filterNameValue);
 }
-//check if is a previous one
-/*function isFavourite(iten) {
-  const favouriteFound = favouritesSeries.find((favIten) => {
-    return favIten.show.id === iten.show.id;
-  });
-
-  if (favouriteFound === undefined) {
-    return false;
-  } else {
-    return true;
-  }
-}*/
 
 /////listen and store favourite series
 
@@ -231,7 +217,6 @@ function reset() {
   dataSeries = [];
   paintFavSeries();
   paintSeries();
-  /*dataSeries = [];*/
 }
 
 btnSearch.addEventListener("click", handleButtonSearch);
