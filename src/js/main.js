@@ -1,3 +1,4 @@
+
 "use strict";
 //firstly  var to create html
 const mainElements = document.querySelector(".js_main");
@@ -21,14 +22,14 @@ function paintHtml() {
   html += `</form >`;
   html += `</div>`;
   html += `</section>`;
-  html += `<section class="main_series--container">`;
+  html += `<section class="main_series--container collapsable_search ">`;
   html += `<div class="favourites_container">`;
   html += `<button  class="js-reset-btn  reset_total--button "type="reset" value="submit">Reset</button>`;
   html += `<h2> You say yours favourites are: </h2>`;
   html += `<ul class="favourites_container--series fav_list--series">`;
   html += `</ul>`;
   html += `</div>`;
-  html += `<div class="series_container">`;
+  html += `<div class=" series_container">`;
   html += `<h2> Number 5 finds to you : </h2>`;
   html += `<ul class="series_container--list list_series">`;
   html += `</ul>`;
@@ -217,6 +218,8 @@ function reset() {
   dataSeries = [];
   paintFavSeries();
   paintSeries();
+  setInLocalStorage();
 }
 
-btnSearch.addEventListener("click", handleButtonSearch);
+btnSearch.addEventListener("click", handleButtonSearch)
+
