@@ -116,18 +116,6 @@ function isValidSerie(iten) {
   const filterNameValue = filterInput.value.toLowerCase();
   return iten.name.toLowerCase().includes(filterNameValue);
 }
-//check if is a previous one
-/*function isFavourite(iten) {
-  const favouriteFound = favouritesSeries.find((favIten) => {
-    return favIten.show.id === iten.show.id;
-  });
-
-  if (favouriteFound === undefined) {
-    return false;
-  } else {
-    return true;
-  }
-}*/
 
 /////listen and store favourite series
 
@@ -229,7 +217,6 @@ function reset() {
   dataSeries = [];
   paintFavSeries();
   paintSeries();
-  /*dataSeries = [];*/
 }
 
 btnSearch.addEventListener("click", handleButtonSearch);
