@@ -19,8 +19,8 @@
   align-items: center;
   padding: 10px;
   border-radius: 20px;
-  border: 1px solid purple;
-  background-color: seashell;
+  /*border: 1px solid purple;
+  background-color: seashell;*/
 
   &--img {
     width: 200px;
@@ -30,7 +30,6 @@
   &--name {
     width: 150px;
     text-align: center;
-    border: 1px solid black;
     border-radius: 10px;
     background-color: purple;
     size: 18px;
