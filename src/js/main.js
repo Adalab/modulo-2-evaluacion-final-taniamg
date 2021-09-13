@@ -1,3 +1,4 @@
+
 "use strict";
 //firstly  var to create html
 const mainElements = document.querySelector(".js_main");
@@ -220,4 +221,5 @@ function reset() {
   setInLocalStorage();
 }
 
-btnSearch.addEventListener("click", handleButtonSearch);
+btnSearch.addEventListener("click", handleButtonSearch)
+
