@@ -1,95 +1,204 @@
 "use strict";
-// 1. declaro mainElements para tener acceso a js_main que se usa en paintHtml
+//firstly  var to create html
 const mainElements = document.querySelector(".js_main");
 const imageDefault =
   "https://via.placeholder.com/210x295/ffffff/666666/?text=TV";
 
-// 2. declaro los arrays para almacenar api
 let dataSeries = [];
 let favouritesSeries = [];
 
-// 3. funcion que crea el html del buscador
+// 1.paint basic HTML from JS
 function paintHtml() {
   let html = "";
   html += `<section>`;
   html += `<div class="search_container" >`;
-  html += `<h1> ¿Qué serie quieres encontrar? </h1>`;
-  html += `<form class="form_container">`;
+  html += `<h1> Number 5 is alive. What do I search for you?</h1>`;
+  html += `<form autocomplete="off" class="form_container js_form">`;
   html += `<label for="search request"> </label>`;
-  html += `<input class="text js_text" type="text" placeholder="Fringe" />`;
+  html += `<input id="search request" class="form_container--text js_text" type="text" placeholder="Fringe" />`;
   html += `<label for="submit"> </label>`;
-  html += `<input class="button js_btn" type="submit" value="Buscar" />`;
+  html += `<input id ="submit" class="form_container--button js_btn" type="submit"  />`;
   html += `</form >`;
   html += `</div>`;
   html += `</section>`;
   html += `<section class="main_series--container">`;
   html += `<div class="favourites_container">`;
-  html += `<h2> Series favoritas: </h2>`;
+  html += `<h2> You say yours favourites are: </h2>`;
+  html += `<ul class="favourites_container--series fav_list--series">`;
+  html += `</ul>`;
   html += `</div>`;
   html += `<div class="series_container">`;
-  html += `<h2> Hemos encontrado.... </h2>`;
-  html += `<ul class="list_series">`;
+  html += `<h2> Number 5 finds to you : </h2>`;
+  html += `<ul class="series_container--list list_series">`;
   html += `</ul>`;
   html += `</div>`;
   html += `</section>`;
   mainElements.innerHTML = html;
 }
-
-// 4. llamo a la funcion para que pinte html en main
 paintHtml();
 
-// 5.declaro las variables DESPUES de crear html, porque hace referencia a elementos que se crean DINAMICAMENTE. EL ORDEN IMPORTA!!
+//
 const btnSearch = document.querySelector(".js_btn");
-let inputEl = document.querySelector(".js_text");
-let series = document.querySelector(".list_series");
+const form = document.querySelector(".js_form");
+const inputEl = document.querySelector(".js_text");
+const series = document.querySelector(".list_series");
+const favElements = document.querySelector(".fav_list--series");
 
-// 6. declaro la funcion que llama a la API y almacena result en dataSeries
-function getFromApi() {
+function preventD(event) {
+  event.preventDefault();
+}
+form.addEventListener("submit", preventD);
+
+// call API to get info
+function handleButtonSearch() {
   const url = "https://api.tvmaze.com/search/shows?q=" + inputEl.value;
-  console.log("Step 2");
-  // Llamamos a api y el resultado se lo pasamos al handle, ya que la respuesta puede tarda x, y el flujo de app sigue.
   fetch(url)
     .then((response) => response.json())
     .then((result) => {
       dataSeries = result;
+
       paintSeries();
     });
 }
+btnSearch.addEventListener("click", handleButtonSearch);
 
-function handleResult(result) {
-  dataSeries = result;
-  console.log("Step 3");
-  console.log(dataSeries);
-
-  //paintSeries()
-}
-//funcion para pintar series en ul
+//function to paint list series array at HTML
 function paintSeries() {
-  console.log(dataSeries);
-  series.innerHTML = "";
+  let seriesList = "";
+
   for (const iten of dataSeries) {
-    console.log(iten);
-    series.innerHTML += `<li class="favorites js_favorites">`;
+    seriesList += `<li class="series_item favourites js_favourites" id=${iten.show.id}>`;
+
     if (iten.show.image === null) {
-      series.innerHTML += `<img src ="${imageDefault}">`;
+      seriesList += `<img class="series_item--img"src ="${imageDefault}">`;
     } else {
-      series.innerHTML += `<img src ="${iten.show.image.medium}">`;
+      seriesList += `<img class="series_item--img" src ="${iten.show.image.medium}">`;
     }
-    series.innerHTML += `<h2>${iten.show.name}</h2>`;
-    series.innerHTML += `</li>`;
+    seriesList += `<h2 class="series_item--name">${iten.show.name}</h2>`;
+    seriesList += `</li>`;
+  }
+  series.innerHTML = seriesList;
+
+  listenSerieList(); //call each input to favoriteSeries
+}
+
+//listener fav series
+
+function listenSerieList() {
+  const favSeriesElements = document.querySelectorAll(".js_favourites");
+  for (const favSerie of favSeriesElements) {
+    favSerie.addEventListener("click", handleFavSeries);
   }
 }
 
-//funcion favoritos
+//check a valid one
+function isValidSerie(iten) {
+  const filterNameValue = filterInput.value.toLowerCase();
+  return iten.name.toLowerCase().includes(filterNameValue);
+}
+//check if is a previous one
+function isFavourite(iten) {
+  const favouriteFound = favouritesSeries.find((favIten) => {
+    return favIten.show.id === iten.show.id;
+  });
 
-//7. declaro la función manejadora que llama al evento de buscar en el API
-function handleButtonSearch(ev) {
-  console.log("Init - Pulso boton");
-  ev.preventDefault();
-  console.log("Step 1");
-  getFromApi();
-  console.log("Step 4");
+  if (favouriteFound === undefined) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
-//
+/////listen and store favourite series
+
+//handle event
+function handleFavSeries(ev) {
+  //search  clicked id
+  const selectedSerie = parseInt(ev.currentTarget.id);
+  //find serie which belongs id
+  const clickedSerie = dataSeries.find((iten) => {
+    return iten.show.id === selectedSerie;
+  });
+
+  // check serie at fav array
+  const favSeriesFound = favouritesSeries.findIndex((favIten) => {
+    return favIten.show.id === selectedSerie;
+  });
+  //if it doesn´t give back -1
+  if (favSeriesFound === -1) {
+    // add fav array
+    favouritesSeries.push(clickedSerie);
+  } else {
+    //if it is delete it
+    favouritesSeries.splice(favSeriesFound, 1);
+  }
+  paintFavSeries();
+  /*handleEachDelBtn();*/
+  setInLocalStorage();
+}
+
+//paint fav lis serie
+function paintFavSeries() {
+  let favElement = "";
+
+  for (const eachSerie of favouritesSeries) {
+    favElement += `<li class="favourites_item js_favourites" id=${eachSerie.show.id}>`;
+
+    if (eachSerie.show.image === null) {
+      favElement += `<img class="favourites_item--img" src ="${imageDefault}">`;
+    } else {
+      favElement += `<img  class="favourites_item--img" src ="${eachSerie.show.image.medium}">`;
+    }
+    favElement += `<h2 class="favourites_item--name">${eachSerie.show.name}</h2>`;
+    favElement += `<button  class="js-delete-btn resetFavItem"type="reset" value="submit">x</button>`;
+    favElement += `</li>`;
+  }
+  favElements.innerHTML = favElement;
+
+  clickDelBtn();
+}
+
+//delete a single favourite
+
+//listen each favourite delete item
+
+function clickDelBtn() {
+  const delEachFavBtn = document.querySelectorAll(".js-delete-btn");
+  for (const eachbtn of delEachFavBtn) {
+    eachbtn.addEventListener("click", deleteOneSerie);
+  }
+}
+
+function deleteOneSerie(ev) {
+  const selectedDelSerie = parseInt(ev.currentTarget.id);
+  const clickedSerie = favouritesSeries.findIndex((fav) => {
+    return fav.show.id === selectedDelSerie;
+  });
+  if (clickedSerie !== -1) {
+    favouritesSeries.splice(clickedSerie, 1);
+  }
+
+  paintSeries();
+  setInLocalStorage();
+}
+
+// localStorage
+
+// set in
+function setInLocalStorage() {
+  localStorage.setItem("favouritesSeries", JSON.stringify(favouritesSeries));
+}
+
+//get off
+function getLocalStorage() {
+  const localStorageSeries = localStorage.getItem("favouritesSeries");
+  if (localStorageSeries !== null) {
+    favouritesSeries = JSON.parse(localStorageSeries);
+    paintFavSeries();
+  }
+  //deleteOneSerie();
+}
+
+getLocalStorage();
+
 btnSearch.addEventListener("click", handleButtonSearch);

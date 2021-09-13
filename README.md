@@ -1,8 +1,14 @@
--[x] Hacer un esquema -[x] Hacer la estructura de HTMl donde vamos a implementar con javaScript los elementos. Css justo para empezar.
--[]Iniciar busqueda: -[x]crear imput texto y boton de busqueda. -[x]filtrar por datos imput busqueda. -[x]ecuchar evento sobre boton busqueda -[x]crear petición al servidor. -[x]guardar resultado en una variable.
--[]pintar series resultantes de la busqueda.
--[] Seleccionar series favoritas:
--[]crear función manejadora.
--[]escuchar evento sobre el resultado de la busqueda.
--[]identificar la serie seleccionada.
--[]añadir al array favoritos y pintarlo en su espacio correspondiente.
+### Tasks
+
+- [x] Make a scheme.
+- [x] Make HTML structure to be implement with JS.
+- [x] Implement call to API service with promise.
+- [x] Link search engine with API service.
+- [x] Create listen event over a search.
+- [x] Manage results and paint it with a list.
+- [x] create logic to build favourite series section.
+- [x] Manage results and storage in local service.
+- [x] Create a function to identify the id of favourite serie.
+- [x] Create a new list implementate with new data array .
+- [ ] Change background color of the id if its include in favourites one.
+- [x] Paint favourite selection in a new array and HTML space.
