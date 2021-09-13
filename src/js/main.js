@@ -74,7 +74,6 @@ function isFavourite(iten) {
   } else {
     return true;
   }
-  console.log(isFavourite);
 }
 
 //function to paint list series array at HTML
@@ -83,7 +82,6 @@ function paintSeries() {
 
   for (const iten of dataSeries) {
     const isFav = isFavourite(iten);
-    console.log(isFav);
     if (isFav) {
       seriesList += `<li class="series_item  js_favourites favourite_check" id=${iten.show.id}>`;
     } else {
