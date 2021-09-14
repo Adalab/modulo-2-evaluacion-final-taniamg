@@ -24,6 +24,7 @@ function paintHtml() {
   html += `<section class="main_series--container collapsable_search ">`;
   html += `<div class="favourites_container">`;
   html += `<button  class="js-reset-btn  reset_total--button "type="reset" value="submit">Reset</button>`;
+  html += `<button class="js_log type ="reset" ">Log</button>"`;
   html += `<h2> You say yours favourites are: </h2>`;
   html += `<ul class="favourites_container--series fav_list--series">`;
   html += `</ul>`;
@@ -44,7 +45,7 @@ const form = document.querySelector(".js_form");
 const inputEl = document.querySelector(".js_text");
 const series = document.querySelector(".list_series");
 const favElements = document.querySelector(".fav_list--series");
-
+const btnLog = document.querySelector(".js_log");
 function preventD(event) {
   event.preventDefault();
 }
@@ -93,12 +94,12 @@ function paintSeries() {
     } else {
       seriesList += `<img class="series_item--img" src ="${iten.show.image.medium}">`;
     }
-
+    seriesList += `<h2 class="serie_status "> ${iten.show.status}</h2>`;
     seriesList += `<h2 class="series_item--name">${iten.show.name}</h2>`;
     seriesList += `</li>`;
   }
   series.innerHTML = seriesList;
-
+  console.log(dataSeries);
   listenSerieList(); //call each input to favoriteSeries
 }
 
@@ -145,6 +146,13 @@ function handleFavSeries(ev) {
   setInLocalStorage();
 }
 
+function handleLogName() {
+  for (const eachName of favouritesSeries) {
+    console.log(eachName.show.name);
+  }
+}
+
+btnLog.addEventListener("click", handleLogName);
 //paint fav lis serie
 function paintFavSeries() {
   let favElement = "";
